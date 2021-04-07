@@ -1,0 +1,33 @@
+{
+  "name": "mysql-demo-express",
+  "version": "1.0.0",
+  "description": "MySQL demo task",
+  "main": "app.js",
+  "scripts": {
+    "start": "set PORT=3003 & node app.js",
+    "start-dev": "set PORT=3003 & nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "MySQL",
+    "Database",
+    "Queries"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/srap9499/mysql-demo-express.git"
+  },
+  "author": "Siddhesh Panchal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/srap9499/mysql-demo-express/issues"
+  },
+  "homepage": "https://github.com/srap9499/mysql-demo-express#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "fast-csv": "^4.3.6",
+    "json2csv": "^5.0.6",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.7"
+  }
+}
