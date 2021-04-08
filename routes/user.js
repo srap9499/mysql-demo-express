@@ -11,12 +11,14 @@ const {
     inUser,
     editUser,
     deleteUser,
-    isUser
+    isUser,
+    getDashboard
 } = require('../controllers/user.controller');
 
 // Auth Middlewares
 const {
-    userAuthorize
+    userAuthorize,
+    userAuthenticate
 } = require('../middlewares/auth.middleware');
 
 
@@ -32,6 +34,8 @@ router.put('/', inUser, editUser);
 router.delete('/', inUser, deleteUser);
 
 router.post('/login', isUser , userAuthorize);
+
+router.get('/dashboard', userAuthenticate, getDashboard)
 
 
 

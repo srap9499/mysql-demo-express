@@ -166,7 +166,7 @@ const isUser = (req, res, next) => {
                 const Exists = Boolean(result.length);
 
                 if (Exists) {
-                    req.query.ID = result.ID;
+                    req.ID = result[0].ID;
                     next()
                 } else {
                     res.status(401).send();
@@ -177,7 +177,40 @@ const isUser = (req, res, next) => {
 };
 
 
+// User Dashboard (Validate)
+const getDashboard = (req, res, next) => {
+    const ID = req.payload.ID;
+    const Name = req.payload.Name;
+    let condition = '';
+    if(ID === undefined || ID === null) {
+        res.status(400).send();
+    } else {
+        condition = `Where u.ID = ${ID}`;
+    }
 
+    const getDashboardSql = 'SELECT DISTINCT '+
+                            ' v.Name as Vehicle, v.Type'+
+                            ' FROM  Vehicle as v'+
+                            ' Left JOIN VehicleRegistration as vr'+
+                            ' ON vr.VehicleID = v.ID'+
+                            ' Left JOIN User as u'+
+                            ' ON vr.UserID = u.ID'+
+                            ` ${condition}`;
+
+    dbConnect.query(getDashboardSql, (err, result) => {
+        if (err) {
+            res.status(500).json(err).send();
+        } else {
+            const Exists = Boolean(result.length);
+
+            if (Exists) {
+                res.status(200).json({Name: Name, My_Vehicle: result}).send();
+            } else {
+                res.status(404).json({Name: Name, My_Vehicle: "No Records Found!"}).send();
+            }
+        }
+    });
+};
 
 
 module.exports = {
@@ -187,5 +220,6 @@ module.exports = {
     inUser, 
     editUser, 
     deleteUser,
-    isUser
+    isUser,
+    getDashboard
 };
