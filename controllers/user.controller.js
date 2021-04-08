@@ -149,6 +149,33 @@ const deleteUser = (req, res, next) => {
     });
 };
 
+const isUser = (req, res, next) => {
+    const name = req.body.Name;
+    const email = req.body.Email;
+    const password = req.body.Password;
+
+    if (!name || !email || !password) {
+        res.status(406).send("Invalid Credentials");
+    } else {
+        const isUserSql = `SELECT ID FROM User WHERE (Name, Email, Password) = ('${name}', '${email}', '${password}')`;
+
+        dbConnect.query(isUserSql, (err, result) => {
+            if (err) {
+                res.status(500).send();
+            } else {
+                const Exists = Boolean(result.length);
+
+                if (Exists) {
+                    req.query.ID = result.ID;
+                    next()
+                } else {
+                    res.status(401).send();
+                }
+            }
+        });
+    }
+};
+
 
 
 
@@ -159,5 +186,6 @@ module.exports = {
     addUser, 
     inUser, 
     editUser, 
-    deleteUser
+    deleteUser,
+    isUser
 };

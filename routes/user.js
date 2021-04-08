@@ -10,8 +10,14 @@ const {
     addUser,
     inUser,
     editUser,
-    deleteUser
+    deleteUser,
+    isUser
 } = require('../controllers/user.controller');
+
+// Auth Middlewares
+const {
+    userAuthorize
+} = require('../middlewares/auth.middleware');
 
 
 
@@ -24,6 +30,8 @@ router.post('/', avoidDuplicateUser, addUser);
 router.put('/', inUser, editUser);
 
 router.delete('/', inUser, deleteUser);
+
+router.post('/login', isUser , userAuthorize);
 
 
 
