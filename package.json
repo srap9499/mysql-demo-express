@@ -4,8 +4,8 @@
   "description": "MySQL demo task",
   "main": "app.js",
   "scripts": {
-    "start": "set PORT=3003 & node app.js",
-    "start-dev": "set PORT=3003 & nodemon app.js",
+    "start": "SET PORT=3003& node .",
+    "start-dev": "SET PORT=3003& nodemon .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

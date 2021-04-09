@@ -10,7 +10,6 @@ const userAuthorize = (req, res, next) => {
         Name: req.body.Name,
         Email: req.body.Email
     }
-
     const token = jwt.sign(payload, "My secret my secret none of your secret", {expiresIn: 3600});
     res.status(200).json({token: token}).send();
 };
@@ -23,7 +22,6 @@ const userAuthenticate = (req, res, next) => {
         res.status(401).send("Unauthorized!");
     } else {
         const token = authToken.split(' ')[1];
-
         jwt.verify(token, "My secret my secret none of your secret", (err, payload) => {
             if (err) {
                 res.status(401).send("Unauthorized!");

@@ -7,15 +7,13 @@ const { dbConnect } = require('../config/db.config');
 // VehicleRegistration Operations
 
 const getVehicleRegistration = (req, res, next) => {
-    
     const getVehicleRegistrationSql = 'SELECT * FROM VehicleRegistration';
     dbConnect.query(getVehicleRegistrationSql, (err, result) => {
         if (err) {
             res.status(500).send();
         } else {
-            const Exits = Boolean(result.length);
-            
-            if (Exits) {
+            const Exists = Boolean(result.length);
+            if (Exists) {
                 console.log('Selected Successfully');            
                 res.status(200).send(result);
             } else {
@@ -24,26 +22,21 @@ const getVehicleRegistration = (req, res, next) => {
             }
         }
     });
-
 };
+
 const avoidDuplicateVehicleRegistration = (req, res, next) => {
-    const UserID = req.body.UserID;
-    const VehicleID = req.body.VehicleID;
-    const RegistrationDate = req.body.RegistrationDate;
-    const ExpiryDate = req.body.ExpiryDate;
-    
+    const { UserID, VehicleID, RegistrationDate, ExpiryDate } = req.body;
     if (!UserID || !VehicleID || !RegistrationDate || !ExpiryDate) {
         res.status(406).send();   
     } else {
-        const avoidDuplicateVehicleRegistrationSql = `SELECT * FROM VehicleRegistration where (UserID, VehicleID, RegistrationDate, ExpiryDate) = (${UserID}, ${VehicleID}, '${RegistrationDate}', '${ExpiryDate}')`;
-        
+        const avoidDuplicateVehicleRegistrationSql = `SELECT * FROM VehicleRegistration
+        WHERE (UserID, VehicleID, RegistrationDate, ExpiryDate) = (${UserID}, ${VehicleID}, '${RegistrationDate}', '${ExpiryDate}')`;
         dbConnect.query(avoidDuplicateVehicleRegistrationSql, (err, result) => {
             if (err) {
                 res.status(500).send();
             } else {
-                const Exits = Boolean(result.length);
-            
-                if (Exits) {
+                const Exists = Boolean(result.length);
+                if (Exists) {
                     res.status(208).send();
                 } else {
                     next();
@@ -52,14 +45,12 @@ const avoidDuplicateVehicleRegistration = (req, res, next) => {
         });
     }
 };
+
 const addVehicleRegistration = (req, res, next) => {
-    const UserID = req.body.UserID;
-    const VehicleID = req.body.VehicleID;
-    const RegistrationDate = req.body.RegistrationDate;
-    const ExpiryDate = req.body.ExpiryDate;
-    
-    const addVehicleRegistrationSql = `INSERT INTO VehicleRegistration (UserID, VehicleID, RegistrationDate, ExpiryDate) VALUES (${UserID}, ${VehicleID}, '${RegistrationDate}', '${ExpiryDate}')`;
-    
+    const { UserID, VehicleID, RegistrationDate, ExpiryDate } = req.body;
+    const addVehicleRegistrationSql = `INSERT INTO VehicleRegistration
+    (UserID, VehicleID, RegistrationDate, ExpiryDate)
+    VALUES (${UserID}, ${VehicleID}, '${RegistrationDate}', '${ExpiryDate}')`;
     dbConnect.query(addVehicleRegistrationSql, (err) => {
         if (err) {
             res.status(500).send();
@@ -72,20 +63,16 @@ const addVehicleRegistration = (req, res, next) => {
 
 const inVehicleRegistration = (req, res, next) => {
     const ID = req.body.ID;
-    
     if (!ID) {
         res.status(406).send();
     } else {
-
         const inVehicleRegistrationSql = `SELECT * FROM VehicleRegistration where ID = ${ID}`;
-        
         dbConnect.query(inVehicleRegistrationSql, (err, result) => {
             if (err) {
                 res.status(500).send();
             } else {
-                const Exits = Boolean(result.length);
-            
-                if (!Exits) {
+                const Exists = Boolean(result.length);
+                if (!Exists) {
                     res.status(404).send();
                 } else {
                     next();
@@ -97,21 +84,16 @@ const inVehicleRegistration = (req, res, next) => {
 
 const editVehicleRegistration = (req, res, next) => {
     const ID = req.body.ID;
-    
     let fields = "";
-    
     for (let [key, value] of Object.entries(req.body)) {
         if (key == "ID") continue;
-        
         if (fields === "") {
             fields += `${key} = '${value}'`;
         } else {
             fields += `, ${key} = '${value}'`;
         }
     }
-
     const editVehicleRegistrationSql = `UPDATE VehicleRegistration SET ${fields} WHERE ID = ${ID}`;
-
     dbConnect.query(editVehicleRegistrationSql, (err, result) => {
         if (err) {
             res.status(500).send();
@@ -124,9 +106,7 @@ const editVehicleRegistration = (req, res, next) => {
 
 const deleteVehicleRegistration = (req, res, next) => {
     const ID = req.body.ID;
-
     const deleteVehicleRegistrationSql = `DELETE FROM VehicleRegistration WHERE ID = ${ID}`;
-
     dbConnect.query(deleteVehicleRegistrationSql, (err, result) => {
         if (err) {
             res.status(500).send();

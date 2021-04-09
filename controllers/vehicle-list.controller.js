@@ -9,30 +9,25 @@ const { dbConnect } = require('../config/db.config');
 const getVehicleListByUser = (req, res, next) => {
     const userName = req.query.Name;
     let condition = '';
-    if (userName === undefined) {
-        condition = '';
-    } else {
+    if (userName) {
         condition = `WHERE u.Name = '${userName}'`;
     }
-
-    const getVehicleListByUserSql = 'SELECT DISTINCT '+
-                                    ' u.ID as User_ID, u.Name as User_Name,'+
-                                    ' v.Name as Vehicle_Name, v.Type as Vehicle_Type,'+
-                                    ' vr.RegistrationDate, vr.ExpiryDate'+
-                                    ' FROM Vehicle as v'+
-                                    ' Right JOIN VehicleRegistration as vr'+
-                                    ' ON v.ID = vr.VehicleID'+
-                                    ' Left JOIN User as u'+
-                                    ' ON u.ID = vr.UserID'+
-                                    ` ${condition} `;
-    
+    const getVehicleListByUserSql = `SELECT DISTINCT
+    u.ID as User_ID, u.Name as User_Name,
+    v.Name as Vehicle_Name, v.Type as Vehicle_Type,
+    vr.RegistrationDate, vr.ExpiryDate
+    FROM Vehicle as v
+    Right JOIN VehicleRegistration as vr
+    ON v.ID = vr.VehicleID
+    Left JOIN User as u
+    ON u.ID = vr.UserID
+    ${condition}`;
     dbConnect.query(getVehicleListByUserSql, (err, result) => {
         if (err) {
             res.status(500).send();
         } else {
-            const Exits = Boolean(result.length);
-            
-            if (Exits) {
+            const Exists = Boolean(result.length);
+            if (Exists) {
                 console.log('Fetched VehicleList Successfully');
                 res.status(200).send(result);
             } else {
@@ -41,39 +36,33 @@ const getVehicleListByUser = (req, res, next) => {
             }
         }
     });
-    
 };
 
 
 const getVehicleListByState = (req, res, next) => {
     const stateName = req.query.State;
     let condition = '';
-    if (stateName === undefined) {
-        condition = '';
-    } else {
+    if (stateName) {
         condition = `WHERE s.StateName = '${stateName}'`;
     }
-
-    const getVehicleListByStateSql = 'SELECT DISTINCT '+
-                                    ' s.ID as State_ID, s.StateName as State_Name,'+
-                                    ' v.Name as Vehicle_Name, v.Type as Vehicle_Type,'+
-                                    ' vr.RegistrationDate, vr.ExpiryDate'+
-                                    ' FROM Vehicle as v'+
-                                    ' Right JOIN VehicleRegistration as vr'+
-                                    ' ON v.ID = vr.VehicleID'+
-                                    ' Left JOIN User as u'+
-                                    ' ON u.ID = vr.UserID'+
-                                    ' Left JOIN States as s'+
-                                    ' ON s.ID = u.StateID'+
-                                    ` ${condition} `;
-    
+    const getVehicleListByStateSql = `SELECT DISTINCT
+    s.ID as State_ID, s.StateName as State_Name,
+    v.Name as Vehicle_Name, v.Type as Vehicle_Type,
+    vr.RegistrationDate, vr.ExpiryDate
+    FROM Vehicle as v
+    Right JOIN VehicleRegistration as vr
+    ON v.ID = vr.VehicleID
+    Left JOIN User as u
+    ON u.ID = vr.UserID
+    Left JOIN States as s
+    ON s.ID = u.StateID
+    ${condition}`;
     dbConnect.query(getVehicleListByStateSql, (err, result) => {
         if (err) {
             res.status(500).send();
         } else {
-            const Exits = Boolean(result.length);
-            
-            if (Exits) {
+            const Exists = Boolean(result.length);
+            if (Exists) {
                 console.log('Fetched VehicleList Successfully');
                 res.status(200).send(result);
             } else {
@@ -82,7 +71,6 @@ const getVehicleListByState = (req, res, next) => {
             }
         }
     });
-    
 };
 
 
